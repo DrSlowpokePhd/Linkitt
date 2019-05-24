@@ -3,11 +3,11 @@
     <head>
         <meta charset="utf-8">
         <title>New Link</title>
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="package/main.css">
         <script type="text/javascript"
         src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
         </script>
-        <script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
+        <script src="https://unpkg.com/arweave@1.4.0/bundles/web.bundle.js"></script>
 
         <script>
 
@@ -17,14 +17,9 @@
                 port: 443
             });
 
-            /*const arweave = Arweave.init({
-                host: '127.0.0.1',
-                port: 1984
-            });*/
-
-
             var jwk;
             var wallet_address;
+            var baldisplay = $("<h2></h2>");
 
             function ctrigger () {
                 console.log("Clicked!");
@@ -32,33 +27,32 @@
                 wallet();
             }
 
-            function return_code() {
-                let code;
+            async function return_code(length) {
+                let code = '';
                 var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                 var charactersLength = characters.length;
                 for ( var i = 0; i < length; i++ ) {
                     code += characters.charAt(Math.floor(Math.random() * charactersLength));
                 }
+                console.log(code);
                 return code;
             }
 
             async function new_link(link, wallet) {
                 try {
-                    let viewData = '<a href="' + link + '"></a>';
+                    let viewData = '<!DOCTYPE html><html><head>Linkitt</head><body><a href="' + link + '"></a></body></html>';
                     console.log(viewData);
-                    let code = JSON.stringify(return_code(6));
+                    let code = await return_code(6);
                     let transaction = await arweave.createTransaction({data: viewData}, wallet);
                     transaction.addTag('Content-type', 'text/html');
                     transaction.addTag('code', code);
                     await arweave.transactions.sign(transaction, wallet);
                     const response = await arweave.transactions.post(transaction);
-                    $("h2#code").append("Value: " + code);
-                    alert("link " + link + " submitted");
+                    $("h2#code").append("Link submitted, your code is: " + code);
+                    $("h2#code").append("<h2></h2>").text("Remember this code as it will be the only way to access this link on the permaweb");
                 } catch (err) {
-                    $("h2#code").append(err);
+                    $("h2#code").append("There has been an error " + err);
                 }
-
-
             }
 
             // input the wallet
@@ -81,10 +75,17 @@
                                 //1seRanklLU_1VTGkEk7P0xAwMJfA7owA1JHW5KyZKlY
 
                                 //get current balance
-                                /*arweave.wallets.getBalance(wallet_address).then((balance) => {
-                                    console.log(arweave.ar.winstonToAr(balance));
-                                    $("label.fileContainer").after(arweave.ar.winstonToAr(balance));
-                                });*/
+                                arweave.wallets.getBalance(wallet_address).then((balance) => {
+                                    try {
+                                        let wallet_balance = arweave.ar.winstonToAr(balance);
+                                        baldisplay.text("Wallet Balance: " + wallet_balance + " AR");
+                                        console.log(arweave.ar.winstonToAr(balance));
+                                        $("input#file").after(baldisplay);
+                                    } catch(err) {
+                                        $("input#file").after($("<h2></h2>").text(err));
+                                    }
+
+                                });
                             });
                         }
                         reader.readAsText(input.files[0]);
@@ -95,7 +96,7 @@
 
 
 
-            //form validation
+            //form validation, basically checking to see if it is empty.
             function validate() {
                 var x = $("input#link").val();
                 if (x === "") {
@@ -119,7 +120,7 @@
                 <div class="text-box-open">
                     <input id="link" type="text" name="link" placeholder="Enter Link">
                 </div>
-
+                <div style="text-align: center; padding-top: 2%;"></div>
                 <div style="text-align: center;">
                     <input type="file" id="102" onsubmit="wallet()" style="display: none;"/>
                     <input type="button" class="button" id="file" name="uploadWallet" value="Click To Upload Wallet"onclick="ctrigger()">
