@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css?family=Arimo|Chakra+Petch|Poppins|Raleway");
+
+* {
+    background-color: #e0e0e0;
+    font-family: 'Poppins', sans-serif;
+}
+
+@keyframes button {
+    from{background-color: #e0e0e0;}
+    to{background-color: #bbbbbb;
+        border-width: 4px;
+    }
+}
+
+.header {
+    font-family: 'Poppins', sans-serif;
+    font-weight: regular;
+    letter-spacing: 4px;
+    padding: 50px;
+    text-align: center;
+    font-size: 30pt;
+    background-color: #e0e0e0;
+    text-decoration: underline;
+}
+
+.minor-header {
+    font-family: 'Poppins', sans-serif;
+    font-weight: regular;
+    letter-spacing: 4px;
+    padding: 50px;
+    text-align: left;
+    font-size: 20pt;
+    background-color: #e0e0e0;
+    text-decoration: underline;
+}
+
+div.padder100 {
+    padding: 100;
+}
+
+
+div.text-box {
+    overflow: hidden;
+    display: none;
+    background-color: #404040;
+    margin: auto;
+    text-align: center;
+    padding-left, padding-right: 5%;
+}
+
+.radio {
+    border-width: 4px;
+    background-color: #e0e0e0;
+}
+
+div.text-box-open {
+    overflow: hidden;
+    display: block;
+    margin: auto;
+    text-align: center;
+    padding-left, padding-right: 5%;
+}
+
+div.text-box:focus{
+    display: block;
+}
+
+/*
+Link View
+*/
+.private-link {
+    font-family: 'Poppins';
+    font-size: 14pt;
+    text-align: center;
+    padding-top: 50%;
+}
+
+/*button CSS*/
+div.button{
+    text-align: center;
+}
+
+input.button {
+    text-align: center;
+    padding: 16px 32px;
+    margin: 4px 2px;
+    font-size: 20px;
+    border: 2px solid black;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+input.button:hover {
+    animation-name: button;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+/*input.button:hover {
+    animation-name: button;
+    animation-duration: 1s;
+}*/
+
+/*textbox CSS*/
+input[type=text]{
+    border-width: 2px;
+    border-radius: 4px;
+    font-size: 20px;
+    color: black;
+    border-color: black;
+}
+
+input[type=text]:focus {
+    animation-name: button;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+input[type=radio] {
+    text-align: right;
+}
+
+.fileContainer {
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+.fileContainer [type=file] {
+    cursor: inherit;
+    display: block;
+    font-size: 999px;
+    filter: alpha(opacity=0);
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+}
+
+/*footer*/
+div.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 8pt;
+    text-align: center;
+}

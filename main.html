@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>linkitt.io</title>
+        <link rel="stylesheet" href="main.css">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
+        <script>
+        $(document).ready(function() {
+            var show = false;
+             // Stuff to do as soon as the DOM is ready
+             // Form dropdown from button
+            $("div.button#post").click(function(){
+                window.location.replace("new_link.html");
+            });
+
+            $("div.button#get").click(function(){
+                if (show === false) {
+                        $("div#2").show();
+                        show = true;
+                } else if (show === true) {
+                        $("div#2").hide();
+                        show = false;
+                }
+            });
+
+            $("div.button#get > input.button").mousedown(function(){
+                $("div.button#get > input.button").css("background-color", "#545454")
+            });
+
+            $("div.button#post").mousedown(function(){
+                $("div.button#post").css("background-color", "#545454")
+            });
+        });
+
+        function getLink(code) {
+
+        }
+        </script>
+
+    </head>
+    <body>
+        <div class="header">
+            <h1>Linkitt</h1>
+        </div>
+
+        <div class="button" id="post">
+            <form action="post">
+                <input class="button" type="button" name="new_link" value="New Link">
+            </form>
+        </div>
+
+        <div class="text-box" id="1">
+            <form action="post">
+                <input type="text" placeholder="Enter a link">
+            </form>
+        </div>
+
+        <div class="button" id="get">
+            <form action="post">
+                <input type="button" class="button" name="find_link" value="Find Link">
+            </form>
+        </div>
+
+        <div class="text-box" id="2">
+            <form action="post">
+                <input type="text" placeholder="Enter a code" onsubmit="">
+            </form>
+        </div>
+
+        <div class="footer">
+            click <a href="link_view.html">here</a> to test
+        </div>
+    </body>
+</html>

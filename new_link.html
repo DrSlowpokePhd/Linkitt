@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>New Link</title>
+        <link rel="stylesheet" href="main.css">
+        <script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+        </script>
+        <script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
+
+        <script>
+
+            const arweave = Arweave.init({
+                host: 'arweave.net',
+                protocol: 'https',
+                port: 443
+            });
+
+            /*const arweave = Arweave.init({
+                host: '127.0.0.1',
+                port: 1984
+            });*/
+
+
+            var jwk;
+            var wallet_address;
+
+            function ctrigger () {
+                console.log("Clicked!");
+                $("#102").click();
+                wallet();
+            }
+
+            function return_code() {
+                let code;
+                var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                var charactersLength = characters.length;
+                for ( var i = 0; i < length; i++ ) {
+                    code += characters.charAt(Math.floor(Math.random() * charactersLength));
+                }
+                return code;
+            }
+
+            async function new_link(link, wallet) {
+                try {
+                    let viewData = '<a href="' + link + '"></a>';
+                    console.log(viewData);
+                    let code = JSON.stringify(return_code(6));
+                    let transaction = await arweave.createTransaction({data: viewData}, wallet);
+                    transaction.addTag('Content-type', 'text/html');
+                    transaction.addTag('code', code);
+                    await arweave.transactions.sign(transaction, wallet);
+                    const response = await arweave.transactions.post(transaction);
+                    $("h2#code").append("Value: " + code);
+                    alert("link " + link + " submitted");
+                } catch (err) {
+                    $("h2#code").append(err);
+                }
+
+
+            }
+
+            // input the wallet
+            function wallet() {
+                const input = document.querySelector('input[type="file"]');
+                if (input) {
+                    input.addEventListener('change', function () {
+
+                        const reader = new FileReader();
+                        reader.addEventListener('load', function(e) {
+                            jwk = e.target.result;
+                        });
+                        reader.onload = function() {
+                            console.log(jwk);
+                            jwk = JSON.parse(jwk);
+                            console.log(jwk);
+                            arweave.wallets.jwkToAddress(jwk).then((address) => {
+                                console.log(address);
+                                wallet_address = address;
+                                //1seRanklLU_1VTGkEk7P0xAwMJfA7owA1JHW5KyZKlY
+
+                                //get current balance
+                                /*arweave.wallets.getBalance(wallet_address).then((balance) => {
+                                    console.log(arweave.ar.winstonToAr(balance));
+                                    $("label.fileContainer").after(arweave.ar.winstonToAr(balance));
+                                });*/
+                            });
+                        }
+                        reader.readAsText(input.files[0]);
+
+                    }, false);
+                }
+            }
+
+
+
+            //form validation
+            function validate() {
+                var x = $("input#link").val();
+                if (x === "") {
+                    alert("Name field must be filled");
+                    $("input#link").attr(action, "new_link.html");
+                    return false;
+                } else {
+                    new_link(x, jwk);
+                    return true;
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+        <div class="minor-header">
+            <h2>Linkitt</h2>
+        </div>
+        <div class="radio link-type">
+
+                <div class="text-box-open">
+                    <input id="link" type="text" name="link" placeholder="Enter Link">
+                </div>
+
+                <div style="text-align: center;">
+                    <input type="file" id="102" onsubmit="wallet()" style="display: none;"/>
+                    <input type="button" class="button" id="file" name="uploadWallet" value="Click To Upload Wallet"onclick="ctrigger()">
+                </div>
+
+
+                <div style="text-align: center; padding-top: 2%;"></div>
+                <div class="button">
+                    <input type="button" class="button" id="101" name="submit" value="Submit" onclick="validate()">
+                </div>
+
+
+            <h2 id="code" style="text-align: center"></h2>
+        </div>
+    </body>
+</html>
