@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>test</title>
+        <script src="https://unpkg.com/arweave@1.4.0/bundles/web.bundle.js"></script>
+        <script type="text/javascript">
+            const arweave = Arweave.init({
+                host: 'arweave.net',
+                protocol: 'https',
+                port: 443
+            });
+
+            var code = 12345;
+            const search = arweave.arql({
+                op: "equals",
+                expr1: "code",
+                expr2: code
+            });
+
+            console.log(search);
+        </script>
+    </head>
+    <body>
+        <h1>hewwo?</h1>
+    </body>
+</html>

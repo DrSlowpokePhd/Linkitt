@@ -3,11 +3,19 @@
     <head>
         <meta charset="utf-8">
         <title>linkitt.io</title>
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="package/main.css">
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
+        <script src="https://unpkg.com/arweave@1.4.0/bundles/web.bundle.js"></script>
         <script>
+        const arweave = Arweave.init({
+            host: 'arweave.net',
+            protocol: 'https',
+            port: 443
+        });
         $(document).ready(function() {
+
+
+
             var show = false;
              // Stuff to do as soon as the DOM is ready
              // Form dropdown from button
@@ -16,11 +24,14 @@
             });
 
             $("div.button#get").click(function(){
+                let button = $('');
                 if (show === false) {
                         $("div#2").show();
+                        $("div#2").append(button);
                         show = true;
                 } else if (show === true) {
                         $("div#2").hide();
+                        button.remove();
                         show = false;
                 }
             });
@@ -35,7 +46,28 @@
         });
 
         function getLink(code) {
-
+            const search = arweave.arql({
+                op: "and",
+                expr1: {
+                    op: "equals",
+                    expr1: "code"
+                }
+            });
+            console.log(search);
+            search.forEach(transaction_id => {
+                arweave.transactions.get().then(transaction => {
+                    transaction.get('tags').forEach( tag => {
+                        if ((tag.get('name', {decode: true, string: true}) === "code") &&
+                        (tag.get('value', {decode: true, string: true}) === code)) {
+                            console.log(transaction.get('data', {decode: true,
+                            string: true}));
+                            //window.location.replace("")
+                        } else {
+                            console.log("Not found");
+                        }
+                    });
+                });
+            });
         }
         </script>
 
@@ -64,13 +96,12 @@
         </div>
 
         <div class="text-box" id="2">
-            <form action="post">
-                <input type="text" placeholder="Enter a code" onsubmit="">
-            </form>
+                <input id="search" type="text" placeholder="Enter a code">
+                <input type="button" class="button" name="search" value="Search" onclick="getLink(document.getElementById('search').value)">
         </div>
 
         <div class="footer">
-            click <a href="link_view.html">here</a> to test
+            hewwo?
         </div>
     </body>
 </html>
