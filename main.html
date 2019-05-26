@@ -45,29 +45,34 @@
             });
         });
 
-        function getLink(code) {
-            const search = arweave.arql({
-                op: "and",
-                expr1: {
-                    op: "equals",
-                    expr1: "code"
-                }
-            });
+        async function getLink(code) {
+            let search = {
+                op: "equals",
+                expr1: "code",
+                expr2: code
+            }
             console.log(search);
-            search.forEach(transaction_id => {
-                arweave.transactions.get().then(transaction => {
-                    transaction.get('tags').forEach( tag => {
-                        if ((tag.get('name', {decode: true, string: true}) === "code") &&
-                        (tag.get('value', {decode: true, string: true}) === code)) {
-                            console.log(transaction.get('data', {decode: true,
-                            string: true}));
-                            //window.location.replace("")
-                        } else {
-                            console.log("Not found");
-                        }
+            const res = await arweave.arql(search);
+            if (res.length > 0) {
+                console.log(res);
+                res.forEach(transaction_id => {
+                    arweave.transactions.get(transaction_id).then(transaction => {
+                        transaction.get('tags').forEach( tag => {
+                            if ((tag.get('name', {decode: true, string: true}) === "code") &&
+                            (tag.get('value', {decode: true, string: true}) === code)) {
+                                console.log(transaction.get('data', {decode: true,
+                                string: true}));
+                                window.location.replace("https://arweave.net/tx/" + transaction_id + "/data.html");
+                            } else {
+                                console.log("Not found");
+                            }
+                        });
                     });
                 });
-            });
+            } else {
+                console.log("Error...");
+            }
+
         }
         </script>
 

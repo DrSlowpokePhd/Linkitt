@@ -26,7 +26,7 @@
                 $("#102").click();
                 wallet();
             }
-
+            //creates and returns code
             async function return_code(length) {
                 let code = '';
                 var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -37,10 +37,10 @@
                 console.log(code);
                 return code;
             }
-
+            //creates and submits data
             async function new_link(link, wallet) {
                 try {
-                    let viewData = '<!DOCTYPE html><html><head>Linkitt</head><body><a href="' + link + '"></a></body></html>';
+                    let viewData = '<!DOCTYPE html><html><head>Linkitt</head><body><a href="https://' + link + '">Here is the link!</a></body></html>';
                     console.log(viewData);
                     let code = await return_code(6);
                     let transaction = await arweave.createTransaction({data: viewData}, wallet);
@@ -48,8 +48,8 @@
                     transaction.addTag('code', code);
                     await arweave.transactions.sign(transaction, wallet);
                     const response = await arweave.transactions.post(transaction);
-                    $("h2#code").append("Link submitted, your code is: " + code);
-                    $("h2#code").append("<h2></h2>").text("Remember this code as it will be the only way to access this link on the permaweb");
+                    
+                    $("h2#code").append("<h2></h2>").text("Remember this code " + code + " as it will be the only way to access this link on the permaweb");
                 } catch (err) {
                     $("h2#code").append("There has been an error " + err);
                 }
@@ -72,9 +72,6 @@
                             arweave.wallets.jwkToAddress(jwk).then((address) => {
                                 console.log(address);
                                 wallet_address = address;
-                                //1seRanklLU_1VTGkEk7P0xAwMJfA7owA1JHW5KyZKlY
-
-                                //get current balance
                                 arweave.wallets.getBalance(wallet_address).then((balance) => {
                                     try {
                                         let wallet_balance = arweave.ar.winstonToAr(balance);
@@ -82,7 +79,7 @@
                                         console.log(arweave.ar.winstonToAr(balance));
                                         $("input#file").after(baldisplay);
                                     } catch(err) {
-                                        $("input#file").after($("<h2></h2>").text(err));
+                                        console.log(err);
                                     }
 
                                 });
